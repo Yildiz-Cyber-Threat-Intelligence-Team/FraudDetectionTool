@@ -11,9 +11,13 @@ from scipy import stats
 import logging  
 # from kafka import KafkaConsumer
 from datetime import datetime
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+data_path = os.path.join(script_dir, "PS_20174392719_1491204439457_log.csv")
 
 timestamp = datetime.now().strftime("%Y%m%d_%H")
-log_filename = f"sahtekarlik_analiz_log_{timestamp}.txt"
+log_filename = os.path.join(script_dir, f"sahtekarlik_analiz_log_{timestamp}.txt")
 
 logging.basicConfig(
     filename=log_filename, 
@@ -39,7 +43,7 @@ logging.basicConfig(
 # data = pd.DataFrame(data_list)
 
 
-data = pd.read_csv('PS_20174392719_1491204439457_log.csv') #Veri setini de güncelledim 500000 veri var içinde.
+data = pd.read_csv(data_path)
 print(data.head())
 print(data.isnull().sum())
 
@@ -110,7 +114,7 @@ plt.subplot(1, 2, 2)
 sns.boxplot(x=data_clean['amount'])
 plt.title('Amount Boxplot')
 
-plt.savefig('C:\\Users\\edanu\\Desktop\\fraud\\sahtekarlik_analiz_grafikleri.png')
+plt.savefig(os.path.join(script_dir, "sahtekarlik_analiz_grafikleri.png"))
 logging.info("Grafikler kaydedildi.")
 
 print("İşlemler ve grafik loglama tamamlandı.")
