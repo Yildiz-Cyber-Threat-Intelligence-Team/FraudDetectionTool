@@ -12,7 +12,7 @@ import logging
 # from kafka import KafkaConsumer
 from datetime import datetime
 
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+timestamp = datetime.now().strftime("%Y%m%d_%H")
 log_filename = f"sahtekarlik_analiz_log_{timestamp}.txt"
 
 logging.basicConfig(
