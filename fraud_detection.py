@@ -10,10 +10,13 @@ from sklearn.ensemble import RandomForestClassifier
 from scipy import stats
 import logging  
 # from kafka import KafkaConsumer
+from datetime import datetime
 
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+log_filename = f"sahtekarlik_analiz_log_{timestamp}.txt"
 
-logging.basicConfig(  #Kodu tekrar tekrar çalıştırsak da txt'nin üstüne yazıyor farklı txt ye yazması için bir işlem ekleyemedim.
-    filename='C:\\Users\\edanu\\Desktop\\fraud\\sahtekarlik_analiz_log.txt', 
+logging.basicConfig(
+    filename=log_filename, 
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
@@ -36,7 +39,7 @@ logging.basicConfig(  #Kodu tekrar tekrar çalıştırsak da txt'nin üstüne ya
 # data = pd.DataFrame(data_list)
 
 
-data = pd.read_csv('C:\\Users\\edanu\\Desktop\\fraud\\PS_20174392719_1491204439457_log.csv') #Veri setini de güncelledim 500000 veri var içinde.
+data = pd.read_csv('PS_20174392719_1491204439457_log.csv') #Veri setini de güncelledim 500000 veri var içinde.
 print(data.head())
 print(data.isnull().sum())
 
