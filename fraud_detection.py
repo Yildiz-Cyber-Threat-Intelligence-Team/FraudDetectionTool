@@ -1,17 +1,19 @@
+import os
+import json
 import pandas as pd
 import seaborn as sns
 import numpy as np
+import logging
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from imblearn.over_sampling import SMOTE
-import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from scipy import stats
-import logging  
-# from kafka import KafkaConsumer
+from kafka import KafkaConsumer
 from datetime import datetime
-import os
+
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(script_dir, "PS_20174392719_1491204439457_log.csv")
@@ -28,33 +30,29 @@ logging.basicConfig(
 
 #Bu kısımı kafka için ekledim ama şuan çalışmadığı için yorum satırı olarak düzelttim. Araştırma yapıyorum.
 
-# consumer = KafkaConsumer(
-#     'fraud_topic',  
-#     bootstrap_servers='localhost:9092',  
-#     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
-# )
+consumer = KafkaConsumer(
+    'fraud_topic',  
+    bootstrap_servers='localhost:9092',  
+    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+)
 
-# data_list = []
-# for message in consumer:
-#     data_list.append(message.value)  
-#     if len(data_list) >= 100: 
-#         break
+data_list = []
+for message in consumer:
+    data_list.append(message.value)  
+    if len(data_list) >= 100: 
+        break
 
-# data = pd.DataFrame(data_list)
-
+data = pd.DataFrame(data_list)
 
 data = pd.read_csv(data_path)
 print(data.head())
 print(data.isnull().sum())
 
-
 data.fillna(0, inplace=True)
 logging.info("Eksik veriler temizlendi.")
 
-
 data = pd.get_dummies(data, columns=['type'])
 logging.info("Kategorik veriler kodlandi.")
-
 
 upper_limit = data['amount'].quantile(0.99)
 lower_limit = data['amount'].quantile(0.01)
