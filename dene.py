@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import logging
 import json
-import time
+from datetime import datetime, time
 import random
 import pickle
 from sklearn.preprocessing import StandardScaler
@@ -16,9 +16,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from numpy.random import choice
+from pathlib import Path
+
+timestamp = datetime.now().strftime("%Y%m%d_%H")
+script_dir = Path(__file__).resolve().parent
+logfile = script_dir / 'fraud_detection.log'
+file_path = script_dir / 'fraud_data.csv'
+model_path = script_dir / 'fraud_model.pkl'
+graphic_path = script_dir / 'fraud_analysis_graphic.png'
 
 logging.basicConfig(
-    filename=f'fraud_detection_{int(time.time())}.log',
+    filename=f"{logfile}{timestamp}.log",
     filemode='a',
     format='%(asctime)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -37,10 +45,13 @@ def parse_arguments():
 def load_data(file_path):
     try:
         data = pd.read_csv(file_path)
-        data.fillna(0, inplace=True)
+        data.fillna(data.median(axis=0), inplace=True)
         data.ffill(inplace=True)
-        upper_limit = data['amount'].quantile(0.99)
-        lower_limit = data['amount'].quantile(0.01)
+        Q1 = data['amount'].quantile(0.25)
+        Q3 = data['amount'].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_limit = Q1 - 1.5 * IQR
+        upper_limit = Q3 + 1.5 * IQR
         data = data[(data['amount'] < upper_limit) & (data['amount'] > lower_limit)]
         return data
     except Exception as e:
@@ -54,8 +65,11 @@ def preprocess_data(data):
         if col not in data.columns:
             raise ValueError(f"Missing required column: {col}")
     data_clean = data[required_cols].copy()
-    upper_limit = data_clean['amount'].quantile(0.99)
-    lower_limit = data_clean['amount'].quantile(0.01)
+    Q1 = data['amount'].quantile(0.25)
+    Q3 = data['amount'].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_limit = Q1 - 1.5 * IQR
+    upper_limit = Q3 + 1.5 * IQR
     data_clean = data_clean[(data_clean['amount'] < upper_limit) & (data_clean['amount'] > lower_limit)]
     X = data_clean.drop(['isFraud'], axis=1)
     y = data_clean['isFraud']
@@ -66,7 +80,7 @@ def preprocess_data(data):
     X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=42)
     return X_train, X_test, y_train, y_test, data_clean
 
-def train_model(X_train, y_train, model_path='fraud_model.pkl'):
+def train_model(X_train, y_train, model_path):
     model = XGBClassifier(
         objective='binary:logistic',
         eval_metric='logloss',
@@ -98,7 +112,7 @@ def plot_data_analysis(data_clean):
     plt.subplot(1, 2, 2)
     sns.boxplot(x=data_clean['amount'])
     plt.title('Amount Boxplot')
-    plt.savefig(f'C:\\Users\\edanu\\Desktop\\fraud-ML-deneme2\\fraud\\sahtekarlik_analiz_grafikleri_{int(time.time())}.png')
+    plt.savefig(f'{graphic_path}{timestamp}.png')
     logging.info("Grafikler kaydedildi.")
 
 def stream_zeromq():
@@ -109,7 +123,7 @@ def stream_zeromq():
         transaction = {
             "transaction_id": random.randint(10000, 99999),
             "amount": round(random.uniform(1.0, 1000.0), 2),
-            "timestamp": time.time(),
+            "timestamp": timestamp,
             "is_fraud": choice([0, 1], p=[0.8, 0.2]),
             "location": random.choice(['US', 'UK', 'DE', 'FR']),
             "payment_method": random.choice(['CREDIT_CARD', 'PAYPAL', 'BANK_TRANSFER']),
@@ -119,7 +133,6 @@ def stream_zeromq():
         }
         # Tüm int32 türündeki değerleri int türüne dönüştür
         transaction = {key: int(value) if isinstance(value, np.integer) else value for key, value in transaction.items()}
-        
         socket.send_json(transaction)
         logging.info(f"Sent transaction: {transaction}")
         time.sleep(2)
@@ -153,7 +166,7 @@ def zeromq_consumer(output_file='zeromq_output.json', model_path='fraud_model.pk
                 logging.error(f"Error processing transaction: {str(e)}")
                 logging.error(f"Failed transaction data: {transaction}")
 
-def process_data(data, operation, model_path='fraud_model.pkl', output_file=None):
+def process_data(data, operation, model_path, output_file=None):
     if operation == 'train_model':
         X_train, X_test, y_train, y_test, data_clean = preprocess_data(data)
         model = train_model(X_train, y_train, model_path)
