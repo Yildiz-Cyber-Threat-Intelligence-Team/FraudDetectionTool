@@ -21,7 +21,7 @@ from pathlib import Path
 timestamp = datetime.now().strftime("%Y%m%d_%H")
 script_dir = Path(__file__).resolve().parent
 logfile = script_dir / 'fraud_detection.log'
-file_path = script_dir / 'fraud_data.csv'
+data_path = script_dir / 'fraud_data.csv'
 model_path = script_dir / 'fraud_model.pkl'
 graphic_path = script_dir / 'fraud_analysis_graphic.png'
 
@@ -34,7 +34,7 @@ logging.basicConfig(
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fraud detection and analysis tool with ZeroMQ and ML integration.')
-    parser.add_argument('--file', type=str, required=True, help='CSV file path for initial data loading')
+    parser.add_argument('--file', default=data_path, type=str, required=True, help='CSV file path for initial data loading')
     parser.add_argument('--operation', type=str, choices=[
         'head', 'describe', 'shape', 'fraud_rate', 'train_model',
         'stream_zeromq', 'zeromq_consumer', 'compare', 'plot_fraud',
@@ -44,7 +44,7 @@ def parse_arguments():
     parser.add_argument('--output', type=str, default='zeromq_output.json', help='Output file for ZeroMQ results')
     return parser.parse_args()
 
-def load_data(file_path):
+def load_data(file_path='fraud_data.csv'):
     try:
         data = pd.read_csv(file_path)
         data.fillna(data.median(axis=0), inplace=True)
