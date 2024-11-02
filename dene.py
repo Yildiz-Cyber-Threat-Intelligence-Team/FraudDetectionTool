@@ -37,7 +37,9 @@ def parse_arguments():
     parser.add_argument('--file', type=str, required=True, help='CSV file path for initial data loading')
     parser.add_argument('--operation', type=str, choices=[
         'head', 'describe', 'shape', 'fraud_rate', 'train_model',
-        'stream_zeromq', 'zeromq_consumer'
+        'stream_zeromq', 'zeromq_consumer', 'compare', 'plot_fraud',
+        'fraud_categories', 'fraud_trend', 'monthly_fraud_count', 
+        'fraud_rate_by_type', 'correlation_heatmap', 'high_value_alerts'
     ], required=True, help='Operation to perform')
     parser.add_argument('--output', type=str, default='zeromq_output.json', help='Output file for ZeroMQ results')
     return parser.parse_args()
@@ -166,7 +168,50 @@ def zeromq_consumer(output_file='zeromq_output.json', model_path='fraud_model.pk
                 logging.error(f"Error processing transaction: {str(e)}")
                 logging.error(f"Failed transaction data: {transaction}")
 
-def process_data(data, operation, model_path, output_file=None):
+def compare_fraud_nonfraud(data):
+    fraud_data = data[data['isFraud'] == 1]
+    non_fraud_data = data[data['isFraud'] == 0]
+    logging.info(f"Gerçek işlemlerin ortalama tutarı: ${non_fraud_data['amount'].mean()}")
+    logging.info(f"Sahte işlemlerin ortalama tutarı: ${fraud_data['amount'].mean()}")
+
+def plot_fraud_distribution(data):
+    sns.countplot(x='isFraud', data=data)
+    plt.title("Sahte ve Gerçek İşlemler Dağılımı")
+    plt.savefig("fraud_distribution.png")
+    plt.show()
+
+def fraud_categories(data):
+    fraud_data = data[data['isFraud'] == 1]
+    logging.info("En çok sahte işlemler yapılan işlem türleri:\n" + str(fraud_data['type'].value_counts()))
+
+def fraud_trend(data):
+    data['month'] = (data['step'] // 30)
+    fraud_trend_data = data.groupby('month').isFraud.sum()
+    fraud_trend_data.plot(kind='line', title='Aylık Sahtekarlık Trendleri')
+    plt.savefig("fraud_trend.png")
+    plt.show()
+
+def monthly_fraud_count(data):
+    data['month'] = (data['step'] // 30)
+    monthly_fraud = data[data['isFraud'] == 1].groupby('month').size()
+    logging.info("Aylık Sahte İşlem Sayısı:\n" + str(monthly_fraud))
+
+def fraud_rate_by_type(data):
+    fraud_rate_type = data.groupby('type')['isFraud'].mean() * 100
+    logging.info("İşlem Tipine Göre Sahtecilik Oranı (Yüzde):\n" + str(fraud_rate_type))
+
+def correlation_heatmap(data):
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt=".2f")
+    plt.title("Korelasyon Isı Haritası")
+    plt.savefig("correlation_heatmap.png")
+    plt.show()
+
+def high_value_alerts(data, threshold=10000):
+    high_value_transactions = data[data['amount'] > threshold]
+    logging.info(f"Yüksek Tutarla İşlem (Tutar > {threshold}):\n{high_value_transactions[['amount', 'isFraud']]}")
+
+def process_data(data, operation, model_path='fraud_model.pkl', output_file=None):
     if operation == 'train_model':
         X_train, X_test, y_train, y_test, data_clean = preprocess_data(data)
         model = train_model(X_train, y_train, model_path)
@@ -176,6 +221,22 @@ def process_data(data, operation, model_path, output_file=None):
         stream_zeromq()
     elif operation == 'zeromq_consumer':
         zeromq_consumer(output_file=output_file, model_path=model_path)
+    elif operation == 'compare':
+        compare_fraud_nonfraud(data)
+    elif operation == 'plot_fraud':
+        plot_fraud_distribution(data)
+    elif operation == 'fraud_categories':
+        fraud_categories(data)
+    elif operation == 'fraud_trend':
+        fraud_trend(data)
+    elif operation == 'monthly_fraud_count':
+        monthly_fraud_count(data)
+    elif operation == 'fraud_rate_by_type':
+        fraud_rate_by_type(data)
+    elif operation == 'correlation_heatmap':
+        correlation_heatmap(data)
+    elif operation == 'high_value_alerts':
+        high_value_alerts(data)
     else:
         if operation == 'head':
             logging.info(f"First 5 rows:\n{data.head()}")
