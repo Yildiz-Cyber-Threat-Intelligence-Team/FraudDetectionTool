@@ -11,7 +11,7 @@ Bu proje, fraud detection(sahtecilik tespiti) için yapılmış bir araçtır. M
 - Yüksek miktarlı veya şüpheli işlemler tespit edildiğinde Telegram üzerinden uyarılar gönderir.
 
 Kullanımı
-`python fraud_detection.py --file <VERI_DOSYASI_YOLU> --operation <İŞLEM> --output <ÇIKTI_DOSYASI> --bot_token <BOT_TOKEN> --chat_id <CHAT_ID>`
+```python fraud_detection.py --file <VERI_DOSYASI_YOLU> --operation <İŞLEM> --output <ÇIKTI_DOSYASI> --bot_token <BOT_TOKEN> --chat_id <CHAT_ID>```
 
 ## Parametreler
 `--file` **(gerekli)**: İşlenecek CSV dosyasının yolunu belirtir. Örneğin, `data.csv`.
