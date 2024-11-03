@@ -21,7 +21,7 @@ from pathlib import Path
 timestamp = datetime.now().strftime("%Y%m%d_%H")
 script_dir = Path(__file__).resolve().parent
 logfile = script_dir / 'fraud_detection.log'
-data_path = script_dir / 'fraud_data.csv'
+data_path = script_dir / 'data.csv'
 model_path = script_dir / 'fraud_model.pkl'
 graphic_path = script_dir / 'fraud_analysis_graphic.png'
 
@@ -44,11 +44,12 @@ def parse_arguments():
     parser.add_argument('--output', type=str, default='zeromq_output.json', help='Output file for ZeroMQ results')
     return parser.parse_args()
 
-def load_data(file_path='fraud_data.csv'):
+def load_data(file_path='data.csv'):
     try:
         data = pd.read_csv(file_path)
-        data.fillna(data.median(axis=0), inplace=True)
-        data.ffill(inplace=True)
+        numeric_cols = data.select_dtypes(include=['number']).columns
+        data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].median())
+        data.fillna(method='ffill', inplace=True)
         Q1 = data['amount'].quantile(0.25)
         Q3 = data['amount'].quantile(0.75)
         IQR = Q3 - Q1
@@ -67,8 +68,8 @@ def preprocess_data(data):
         if col not in data.columns:
             raise ValueError(f"Missing required column: {col}")
     data_clean = data[required_cols].copy()
-    Q1 = data['amount'].quantile(0.25)
-    Q3 = data['amount'].quantile(0.75)
+    Q1 = data['amount'].quantile(0.35)
+    Q3 = data['amount'].quantile(0.65)
     IQR = Q3 - Q1
     lower_limit = Q1 - 1.5 * IQR
     upper_limit = Q3 + 1.5 * IQR
