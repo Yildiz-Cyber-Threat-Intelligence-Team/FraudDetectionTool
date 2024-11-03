@@ -2,7 +2,7 @@
 
 # TR
 
-Bu proje, fraud detection() için yapılmış bir araçtır. Makine öğrenimi kullanarak çalışır. ZeroMQ ile anlık veri akışı sağlar, büyük miktardaki işlemler için Telegram'dan uyarı gönderir ve ayrıca farklı analizler de yapabilir. Birçok parametre ile esnek bir analiz ve veri işleme imkanı sunar.
+Bu proje, fraud detection(sahtecilik tespiti) için yapılmış bir araçtır. Makine öğrenimi kullanarak çalışır. ZeroMQ ile anlık veri akışı sağlar, büyük miktardaki işlemler için Telegram'dan uyarı gönderir ve ayrıca farklı analizler de yapabilir. Birçok parametre ile esnek bir analiz ve veri işleme imkanı sunar.
 
 ## Özellikler
 - Fraud tespiti için bir makine öğrenimi modeli oluşturur, eğitir ve test eder.
