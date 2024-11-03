@@ -27,9 +27,9 @@ Bu proje, fraud detection(sahtecilik tespiti) için yapılmış bir araçtır. M
    - `fraud_rate_by_type`: İşlem türlerine göre sahtecilik oranını hesaplar.
    - `correlation_heatmap`: Korelasyon ısı haritasını gösterir.
    - `high_value_alerts`: Yüksek tutarlı işlemleri belirler ve log kaydına ekler.
-`-- output`: ZeroMQ tüketici çıktısının kaydedileceği dosya. Yalnızca `zeromq_consumer` işlemi için kullanılır.
-`-- bot_token`: Telegram bot token’ı. `zeromq_consumer` ile Telegram uyarıları göndermek için kullanılır.
-`-- chat_id`: Telegram chat ID’si. `zeromq_consumer` ile Telegram üzerinden uyarı göndermek için kullanılır.
+-`-- output`: ZeroMQ tüketici çıktısının kaydedileceği dosya. Yalnızca `zeromq_consumer` işlemi için kullanılır.
+-`-- bot_token`: Telegram bot token’ı. `zeromq_consumer` ile Telegram uyarıları göndermek için kullanılır.
+-`-- chat_id`: Telegram chat ID’si. `zeromq_consumer` ile Telegram üzerinden uyarı göndermek için kullanılır.
 
 
 ## Fonksiyonlar
