@@ -275,4 +275,4 @@ if __name__ == "__main__":
     args = parse_arguments()
     data = load_data(args.file)
     if data is not None:
-        process_data(data, args.operation, output_file=args.output)
+        process_data(data, args.operation, output_file=args.output, bot_token=args.bot_token, chat_id=args.chat_id)
