@@ -1,0 +1,4 @@
+2024-11-02 21:48:16,268 - INFO - En �ok sahte i�lemler yap�lan i�lem t�rleri:
+CASH_OUT    94
+TRANSFER    84
+Name: type, dtype: int64
