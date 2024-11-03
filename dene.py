@@ -17,6 +17,7 @@ import seaborn as sns
 from scipy import stats
 from numpy.random import choice
 from pathlib import Path
+import time
 
 timestamp = datetime.now().strftime("%Y%m%d_%H")
 script_dir = Path(__file__).resolve().parent
