@@ -10,7 +10,7 @@ Bu proje, fraud detection(sahtecilik tespiti) için yapılmış bir araçtır. M
 - Veriyi analiz etmek için grafikler oluşturur ve sonuçları, uyarıları log dosyalarına kaydeder.
 - Yüksek miktarlı veya şüpheli işlemler tespit edildiğinde Telegram üzerinden uyarılar gönderir.
 
-Kullanımı
+## Kullanımı
 ```python fraud_detection.py --file <VERI_DOSYASI_YOLU> --operation <İŞLEM> --output <ÇIKTI_DOSYASI> --bot_token <BOT_TOKEN> --chat_id <CHAT_ID>```
 
 ## Parametreler
