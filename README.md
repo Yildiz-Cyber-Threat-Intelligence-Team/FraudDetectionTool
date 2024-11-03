@@ -10,26 +10,26 @@ Bu proje, fraud detection(sahtecilik tespiti) için yapılmış bir araçtır. M
 - Veriyi analiz etmek için grafikler oluşturur ve sonuçları, uyarıları log dosyalarına kaydeder.
 - Yüksek miktarlı veya şüpheli işlemler tespit edildiğinde Telegram üzerinden uyarılar gönderir.
 
-Kullanımı
+## Kullanımı
 ```python fraud_detection.py --file <VERI_DOSYASI_YOLU> --operation <İŞLEM> --output <ÇIKTI_DOSYASI> --bot_token <BOT_TOKEN> --chat_id <CHAT_ID>```
 
 ## Parametreler
-`--file` **(gerekli)**: İşlenecek CSV dosyasının yolunu belirtir. Örneğin, `data.csv`.
-`--operation` **(gerekli)**: Gerçekleştirilecek işlemi belirler. Aşağıdaki işlemlerden biri olabilir:
-- `train_model`: Model eğitimi ve değerlendirme işlemini başlatır.
-- `fraud_rate`: Sahtecilik oranını hesaplar.
-- `stream_zeromq`: Gerçek zamanlı veri akışını başlatır.
-- `compare`: Gerçek ve sahte işlemler arasındaki farkları karşılaştırır.
-- `plot_fraud`: Sahte ve gerçek işlemlerin dağılımını grafikle gösterir.
-- `fraud_categories`: En çok sahte işlemler yapılan işlem türlerini listeler.
-- `fraud_trend`: Aylık sahtecilik trendlerini gösterir.
-- `monthly_fraud_count`: Aylık sahte işlem sayısını listeler.
-- `fraud_rate_by_type`: İşlem türlerine göre sahtecilik oranını hesaplar.
-- `correlation_heatmap`: Korelasyon ısı haritasını gösterir.
-- `high_value_alerts`: Yüksek tutarlı işlemleri belirler ve log kaydına ekler.
-`--output`: ZeroMQ tüketici çıktısının kaydedileceği dosya. Yalnızca `zeromq_consumer` işlemi için kullanılır.
-`--bot_token`: Telegram bot token’ı. `zeromq_consumer` ile Telegram uyarıları göndermek için kullanılır.
-`--chat_id`: Telegram chat ID’si. `zeromq_consumer` ile Telegram üzerinden uyarı göndermek için kullanılır.
+- `-- file` **(gerekli)**: İşlenecek CSV dosyasının yolunu belirtir. Örneğin, `data.csv`.
+- `-- operation` **(gerekli)**: Gerçekleştirilecek işlemi belirler. Aşağıdaki işlemlerden biri olabilir:
+   - `train_model`: Model eğitimi ve değerlendirme işlemini başlatır.
+   - `fraud_rate`: Sahtecilik oranını hesaplar.
+   - `stream_zeromq`: Gerçek zamanlı veri akışını başlatır.
+   - `compare`: Gerçek ve sahte işlemler arasındaki farkları karşılaştırır.
+   - `plot_fraud`: Sahte ve gerçek işlemlerin dağılımını grafikle gösterir.
+   - `fraud_categories`: En çok sahte işlemler yapılan işlem türlerini listeler.
+   - `fraud_trend`: Aylık sahtecilik trendlerini gösterir.
+   - `monthly_fraud_count`: Aylık sahte işlem sayısını listeler.
+   - `fraud_rate_by_type`: İşlem türlerine göre sahtecilik oranını hesaplar.
+   - `correlation_heatmap`: Korelasyon ısı haritasını gösterir.
+   - `high_value_alerts`: Yüksek tutarlı işlemleri belirler ve log kaydına ekler.
+- `-- output`: ZeroMQ tüketici çıktısının kaydedileceği dosya. Yalnızca `zeromq_consumer` işlemi için kullanılır.
+- `-- bot_token`: Telegram bot token’ı. `zeromq_consumer` ile Telegram uyarıları göndermek için kullanılır.
+- `-- chat_id`: Telegram chat ID’si. `zeromq_consumer` ile Telegram üzerinden uyarı göndermek için kullanılır.
 
 
 ## Fonksiyonlar
