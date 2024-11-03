@@ -1,0 +1,7 @@
+2024-11-02 21:26:25,147 - INFO - First 5 rows:
+   step     type    amount     nameOrig  oldbalanceOrg  newbalanceOrig     nameDest  oldbalanceDest  newbalanceDest  isFraud  isFlaggedFraud
+0     1  PAYMENT   9839.64  C1231006815       170136.0       160296.36  M1979787155             0.0             0.0        0               0
+1     1  PAYMENT   1864.28  C1666544295        21249.0        19384.72  M2044282225             0.0             0.0        0               0
+4     1  PAYMENT  11668.14  C2048537720        41554.0        29885.86  M1230701703             0.0             0.0        0               0
+5     1  PAYMENT   7817.71    C90045638        53860.0        46042.29   M573487274             0.0             0.0        0               0
+6     1  PAYMENT   7107.77   C154988899       183195.0       176087.23   M408069119             0.0             0.0        0               0
