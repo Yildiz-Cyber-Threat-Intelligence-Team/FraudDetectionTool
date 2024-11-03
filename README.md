@@ -14,8 +14,8 @@ Bu proje, fraud detection(sahtecilik tespiti) için yapılmış bir araçtır. M
 ```python fraud_detection.py --file <VERI_DOSYASI_YOLU> --operation <İŞLEM> --output <ÇIKTI_DOSYASI> --bot_token <BOT_TOKEN> --chat_id <CHAT_ID>```
 
 ## Parametreler
-`-- file` **(gerekli)**: İşlenecek CSV dosyasının yolunu belirtir. Örneğin, `data.csv`.
-`-- operation` **(gerekli)**: Gerçekleştirilecek işlemi belirler. Aşağıdaki işlemlerden biri olabilir:
+- `-- file` **(gerekli)**: İşlenecek CSV dosyasının yolunu belirtir. Örneğin, `data.csv`.
+- `-- operation` **(gerekli)**: Gerçekleştirilecek işlemi belirler. Aşağıdaki işlemlerden biri olabilir:
    - `train_model`: Model eğitimi ve değerlendirme işlemini başlatır.
    - `fraud_rate`: Sahtecilik oranını hesaplar.
    - `stream_zeromq`: Gerçek zamanlı veri akışını başlatır.
