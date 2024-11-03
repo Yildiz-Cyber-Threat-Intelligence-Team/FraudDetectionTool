@@ -236,7 +236,7 @@ def high_value_alerts(data, threshold=10000):
     high_value_transactions = data[data['amount'] > threshold]
     logging.info(f"Yüksek Tutarla İşlem (Tutar > {threshold}):\n{high_value_transactions[['amount', 'isFraud']]}")
 
-def process_data(data, operation, model_path='fraud_model.pkl', output_file=None):
+def process_data(data, operation, model_path='fraud_model.pkl', output_file=None, bot_token=None, chat_id=None):
     if operation == 'train_model':
         X_train, X_test, y_train, y_test, data_clean = preprocess_data(data)
         model = train_model(X_train, y_train, model_path)
