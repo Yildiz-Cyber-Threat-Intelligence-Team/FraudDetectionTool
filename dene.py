@@ -33,6 +33,28 @@ logging.basicConfig(
     level=logging.INFO
 )
 
+def send_telegram_alert(transaction, bot_token, chat_id):
+    message = (
+        f"Fraud Alert 🚨\n"
+        f"Transaction ID: {transaction['transaction_id']}\n"
+        f"Amount: ${transaction['amount']}\n"
+        f"Old Balance (Origin): ${transaction['oldbalanceOrg']}\n"
+        f"New Balance (Origin): ${transaction['newbalanceOrig']}\n"
+        f"Location: {transaction['location']}\n"
+        f"Payment Method: {transaction['payment_method']}\n"
+        f"Prediction: Fraud Detected"
+    )
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    params = {"chat_id": chat_id, "text": message}
+    try:
+        response = requests.post(url, params=params)
+        if response.status_code == 200:
+            logging.info(f"Telegram alert sent for transaction {transaction['transaction_id']}")
+        else:
+            logging.error(f"Failed to send Telegram alert. Status code: {response.status_code}")
+    except Exception as e:
+        logging.error(f"Error sending Telegram alert: {e}")
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fraud detection and analysis tool with ZeroMQ and ML integration.')
     parser.add_argument('--file', default=data_path, type=str, required=True, help='CSV file path for initial data loading')
@@ -135,7 +157,6 @@ def stream_zeromq():
             "newbalanceOrig": round(random.uniform(0.0, 10000.0), 2),
             "oldbalanceDest": round(random.uniform(0.0, 10000.0), 2)
         }
-        # Tüm int32 türündeki değerleri int türüne dönüştür
         transaction = {key: int(value) if isinstance(value, np.integer) else value for key, value in transaction.items()}
         socket.send_json(transaction)
         logging.info(f"Sent transaction: {transaction}")
