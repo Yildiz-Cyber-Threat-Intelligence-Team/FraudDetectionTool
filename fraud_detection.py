@@ -57,7 +57,7 @@ def send_telegram_alert(transaction, bot_token, chat_id):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fraud detection and analysis tool with ZeroMQ and ML integration.')
-    parser.add_argument('--file', default=data_path, type=str, required=True, help='CSV file path for initial data loading')
+    parser.add_argument('--file', type=str, required=True, help='CSV file path for initial data loading')
     parser.add_argument('--operation', type=str, choices=[
         'head', 'describe', 'shape', 'fraud_rate', 'train_model',
         'stream_zeromq', 'zeromq_consumer', 'compare', 'plot_fraud',
@@ -65,6 +65,8 @@ def parse_arguments():
         'fraud_rate_by_type', 'correlation_heatmap', 'high_value_alerts'
     ], required=True, help='Operation to perform')
     parser.add_argument('--output', type=str, default='zeromq_output.json', help='Output file for ZeroMQ results')
+    parser.add_argument('--bot_token', type=str, help='Telegram bot token for alerts')
+    parser.add_argument('--chat_id', type=str, help='Telegram chat ID for alerts')
     return parser.parse_args()
 
 def load_data(file_path='data.csv'):
@@ -162,7 +164,7 @@ def stream_zeromq():
         logging.info(f"Sent transaction: {transaction}")
         time.sleep(2)
 
-def zeromq_consumer(output_file='zeromq_output.json', model_path='fraud_model.pkl'):
+def zeromq_consumer(output_file='zeromq_output.json', model_path='fraud_model.pkl', bot_token=None, chat_id=None):
     try:
         with open(model_path, 'rb') as f:
             model = pickle.load(f)
@@ -243,7 +245,7 @@ def process_data(data, operation, model_path='fraud_model.pkl', output_file=None
     elif operation == 'stream_zeromq':
         stream_zeromq()
     elif operation == 'zeromq_consumer':
-        zeromq_consumer(output_file=output_file, model_path=model_path)
+        zeromq_consumer(output_file=output_file, model_path=model_path, bot_token=bot_token, chat_id=chat_id)
     elif operation == 'compare':
         compare_fraud_nonfraud(data)
     elif operation == 'plot_fraud':
