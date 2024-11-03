@@ -1,0 +1,8 @@
+2024-11-02 21:59:11,279 - INFO - ��lem Tipine G�re Sahtecilik Oran� (Y�zde):
+type
+CASH_IN     0.000000
+CASH_OUT    0.051636
+DEBIT       0.000000
+PAYMENT     0.000000
+TRANSFER    0.235103
+Name: isFraud, dtype: float64
